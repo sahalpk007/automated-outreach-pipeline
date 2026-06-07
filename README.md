@@ -1,258 +1,323 @@
 # Automated Outreach Pipeline
 
-## Problem
+An intelligent, automated B2B outreach system that discovers lookalike companies, identifies decision makers, and sends personalized cold emails at scale.
 
-Building a fully automated cold-outreach engine that companies pay for. This system solves the challenge of scaling personalized B2B outreach by automating the entire pipeline from company discovery to email delivery—without any manual handoffs or copy-paste operations.
+## Problem Statement
 
-**Key Pain Points Addressed:**
+Sales and business development teams spend countless hours manually:
 
-- Manual identification of target companies is time-consuming and error-prone
-- Finding decision-makers requires extensive LinkedIn research
-- Verifying work emails is tedious and unreliable
-- Personalizing outreach at scale is nearly impossible manually
-- Zero automation in the traditional outreach workflow
+- Researching competitor companies and finding similar prospects
+- Hunting for decision makers and their contact information
+- Manually composing personalized cold emails
+- Tracking campaign progress and response rates
+
+This manual process is time-consuming, error-prone, and doesn't scale. **Automated Outreach Pipeline** solves this by fully automating the discovery-to-outreach workflow.
 
 ## Features
 
-### One Input. Four Stages. A Full Outreach Engine
+✨ **Three-Stage Automated Pipeline:**
 
-The system takes a **single company domain** as input and automatically executes through multiple stages:
+- **Stage 1 - Lookalike Discovery**: Find similar companies based on a seed domain using Ocean API
+- **Stage 2 - Prospect Research**: Identify decision makers and extract verified email addresses using Prospeo API
+- **Stage 3 - Outreach Execution**: Send personalized emails at scale using Brevo API
 
-#### Stage 1: Find Lookalike Companies (Prospeo)
+🛡️ **Safety Checkpoint**: Review and approve all prospects before sending emails
 
-- Discovers companies similar to your seed domain
-- Uses industry filters and company data
-- Returns clean list of target company domains
-- Output: Domain names for next stage
+📊 **Structured Data**: Type-safe prospect and company information management
 
-#### Stage 2: Find Decision-Makers (Prospeo)
-
-- Surfaces C-suite and VP-level decision makers
-- Extracts LinkedIn profiles and company roles
-- Builds comprehensive contact profiles
-- Output: Professional titles and contact information
-
-#### ~~Stage 3: Resolve Work Email IDs (Eazyreach)~~ **SKIPPED**
-
-- *Note: Eazyreach had API issues and was skipped during implementation*
-- Alternative approach: Email verification integrated with Stage 2 data
-
-#### Stage 3: Send Personalized Outreach (Brevo)
-
-- Sends fully personalized cold emails
-- Uses decision-maker data for personalization
-- Includes safety checkpoint before sending
-- Output: Delivery confirmations with tracking
-
-### Key Capabilities
-
-✅ **Runs End-to-End** - One domain input triggers all four stages automatically  
-✅ **No Manual Handoffs** - Each stage feeds directly into the next  
-✅ **Error Resilience** - Handles rate limits, missing data, and partial failures  
-✅ **Safety Checkpoint** - Shows a summary before emails actually fire  
-✅ **Clean, Modular Code** - Each stage is independent and testable  
-✅ **Sharp Email Copy** - Personalized outreach (copy is yours to refine)
+⚡ **Fast & Efficient**: Built with TypeScript for type safety and Node.js for performance
 
 ## Tech Stack
 
-- **Runtime:** Node.js with TypeScript
-- **Language:** TypeScript 6.0.3
-- **API Integrations:**
-  - **Prospeo** - Company discovery and people search
-  - **Brevo** - Email delivery platform
-- **Build Tool:** TSX (TypeScript executor)
-- **Dependencies:**
-  - `@getbrevo/brevo` - Brevo SDK for email operations
-  - `dotenv` - Environment variable management
-  - `typescript` - Type safety
+| Layer | Technology |
+|-------|-----------|
+| **Language** | TypeScript |
+| **Runtime** | Node.js |
+| **Build Tool** | TSC (TypeScript Compiler) |
+| **Execution** | tsx (TypeScript executor) |
+| **Package Manager** | npm |
+| **API Integrations** | Ocean, Prospeo, Brevo |
+| **Email Service** | Brevo (formerly Sendinblue) |
+
+**Key Dependencies:**
+
+- `@getbrevo/brevo` - Official Brevo API client
+- `dotenv` - Environment variable management
+- `typescript` - Type safety and compilation
+- `tsx` - Run TypeScript directly without pre-compilation
+- `@types/node` - Node.js type definitions
+
+## Installation
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm
+- API credentials for:
+  - [Ocean API](https://ocean.ai/) - For lookalike company discovery
+  - [Prospeo API](https://prospeo.io/) - For prospect research and email verification
+  - [Brevo API](https://www.brevo.com/) - For email delivery
+
+### Setup Steps
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/sahalpk007/automated-outreach-pipeline.git
+   cd automated-outreach-pipeline
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment variables:**
+   Create a `.env` file in the project root with your API credentials:
+
+   ```env
+   OCEAN_API_KEY=your_ocean_api_key
+   PROSPEO_API_KEY=your_prospeo_api_key
+   BREVO_API_KEY=your_brevo_api_key
+   BREVO_SENDER_EMAIL=your_verified_sender_email@company.com
+   ```
+
+4. **Build the project (optional):**
+
+   ```bash
+   npm run build
+   ```
+
+## Usage
+
+### Running the Pipeline
+
+Start the interactive pipeline:
+
+```bash
+npm run dev
+```
+
+### Pipeline Flow
+
+1. **Enter a seed domain** (e.g., `stripe.com`)
+   - The system will find similar companies based on this reference
+
+2. **Stage 1 - Lookalike Discovery**
+   - Queries Ocean API to find companies similar to your seed domain
+   - Returns a curated list of target prospects
+
+3. **Stage 2 - Prospect Research**
+   - Identifies decision makers at each target company
+   - Extracts and verifies email addresses using Prospeo
+   - Returns enriched prospect profiles with contact details
+
+4. **Safety Checkpoint**
+   - Review all identified prospects and their details
+   - Confirm that verified emails will be used
+   - Authorize or abort before any emails are sent
+
+5. **Stage 3 - Outreach Execution**
+   - Sends personalized cold emails via Brevo
+   - Tracks email delivery status
+   - Completes the outreach campaign
+
+### Example Session
+
+```
+📥 Enter a seed company domain (e.g., stripe.com): stripe.com
+
+[Stage 1] Searching for lookalike companies...
+✅ Found 15 similar companies
+
+[Stage 2] Extracting decision makers and emails...
+✅ Found 23 verified prospects
+
+🛑 --- SAFETY CHECKPOINT ---
+The system is primed to mail 23 verified contacts:
+  [1] John Smith (VP Sales) -> john@example.com
+  [2] Sarah Johnson (CEO) -> sarah@example2.com
+  ...
+
+Do you authorize sending these personalized emails? (yes/no): yes
+
+[Stage 3] Sending outreach emails...
+✅ Pipeline execution successfully finished!
+```
 
 ## Project Structure
 
 ```
 automated-outreach-pipeline/
 ├── src/
-│   ├── index.ts                 # Main CLI entry point
-│   ├── types.ts                 # TypeScript interfaces
+│   ├── index.ts                    # Main entry point and pipeline orchestrator
+│   ├── types.ts                    # TypeScript type definitions
 │   └── stages/
-│       ├── stage1-ocean.ts      # Company discovery
-│       ├── stage2-prospeo.ts    # Decision-maker research
-│       └── stage3-brevo.ts      # Email sending
-├── package.json
-├── tsconfig.json
-└── README.md
+│       ├── stage1-ocean.ts         # Lookalike company discovery
+│       ├── stage2-prospeo.ts       # Prospect research & email verification
+│       └── stage3-brevo.ts         # Personalized email delivery
+├── package.json                    # Project dependencies
+├── tsconfig.json                   # TypeScript configuration
+├── .env.example                    # Example environment variables
+└── README.md                       # This file
+```
+
+## Stage Details
+
+### Stage 1: Lookalike Company Discovery
+
+- **Input**: Seed company domain
+- **Process**: Uses Ocean API to find similar companies based on industry, size, and characteristics
+- **Output**: List of target company domains
+
+### Stage 2: Prospect Research & Email Verification
+
+- **Input**: List of company domains
+- **Process**: Identifies key decision makers and verifies their email addresses using Prospeo
+- **Output**: Enriched prospect profiles with name, title, email, and company info
+
+### Stage 3: Personalized Email Outreach
+
+- **Input**: List of verified prospects
+- **Process**: Sends personalized cold emails via Brevo with customized content
+- **Output**: Email delivery confirmation and campaign metrics
+
+## Screenshots
+
+> Add screenshots here (to be added later):
+
+- ![Pipeline Main Menu](./screenshots/01-main-menu.png)
+- ![Lookalike Discovery Results](./screenshots/02-lookalike-results.png)
+- ![Prospect Research Results](./screenshots/03-prospect-results.png)
+- ![Safety Checkpoint Review](./screenshots/04-safety-checkpoint.png)
+- ![Email Delivery Status](./screenshots/05-delivery-status.png)
+
+## Configuration
+
+### Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `OCEAN_API_KEY` | API key for Ocean lookalike discovery service | Yes |
+| `PROSPEO_API_KEY` | API key for Prospeo prospect research service | Yes |
+| `BREVO_API_KEY` | API key for Brevo email service | Yes |
+| `BREVO_SENDER_EMAIL` | Verified sender email address in Brevo | Yes |
+
+## Scripts
+
+```bash
+# Run the pipeline in development mode
+npm run dev
+
+# Build the TypeScript project
+npm run build
+
+# Run the compiled JavaScript (after building)
+npm start
 ```
 
 ## How It Works
 
-### Step-by-Step Flow
-
-1. **User Input** → A human provides one seed domain (e.g., `stripe.com`)
-2. **Stage 1** → System discovers 5 lookalike companies with similar characteristics
-3. **Stage 2** → Researches decision-makers at each company, extracts emails and profiles
-4. **Safety Checkpoint** → Shows prospected contacts before sending; requires human approval
-5. **Stage 3** → Sends personalized emails through Brevo
-6. **Completion** → Pipeline finishes, all data is processed end-to-end
-
-### Data Flow
-
 ```
-Domain Input
-    ↓
-Stage 1: Discover Companies (Prospeo API)
-    ↓ (Returns: domain list)
-Stage 2: Find Decision-Makers (Prospeo API)
-    ↓ (Returns: prospect profiles with emails)
-[SAFETY CHECKPOINT - User Approval]
-    ↓
-Stage 3: Send Emails (Brevo API)
-    ↓
-Pipeline Complete
-```
-
-## Setup & Installation
-
-### Prerequisites
-
-- Node.js (v16+)
-- npm or yarn
-- API credentials for:
-  - **Prospeo** - Get API key from [app.prospeo.io](https://app.prospeo.io/api)
-  - **Brevo** - Sign up at [app.brevo.com](https://app.brevo.com)
-
-### Installation Steps
-
-```bash
-# Clone the repository
-git clone <repository-url>
-cd automated-outreach-pipeline
-
-# Install dependencies
-npm install
-
-# Create .env file with API credentials
-touch .env
+┌─────────────────────────────────────────────────────────────┐
+│                  Automated Outreach Pipeline                │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+                    (Enter Seed Domain)
+                              ↓
+                    ┌─────────────────┐
+                    │  Stage 1: Ocean │
+                    │ Find Lookalikes │
+                    └────────┬────────┘
+                             ↓
+                    ┌─────────────────────┐
+                    │ Stage 2: Prospeo    │
+                    │ Find Decision Makers│
+                    │ & Verify Emails     │
+                    └────────┬────────────┘
+                             ↓
+                    ┌─────────────────────┐
+                    │ Safety Checkpoint   │
+                    │ Review & Authorize  │
+                    └────────┬────────────┘
+                             ↓
+                    ┌─────────────────────┐
+                    │ Stage 3: Brevo      │
+                    │ Send Emails at Scale│
+                    └────────┬────────────┘
+                             ↓
+                    (Campaign Complete)
 ```
 
-### Environment Variables
+## Error Handling
 
-Create a `.env` file in the root directory:
+The pipeline includes robust error handling:
 
-```env
-PROSPEO_API_KEY=your_prospeo_api_key_here
-BREVO_API_KEY=your_brevo_api_key_here
-BREVO_SENDER_EMAIL=your_company_email@domain.com
-```
+- Validates user input and API responses
+- Gracefully handles API rate limits and timeouts
+- Provides clear error messages for troubleshooting
+- Checkpoints prevent accidental email sends
 
-## Usage
+## Best Practices
 
-### Run the Pipeline
+1. **Test with small batches** - Start with 5-10 prospects before scaling
+2. **Personalize email content** - Customize messages for better response rates
+3. **Monitor deliverability** - Check Brevo dashboard for bounce rates and complaints
+4. **Respect email regulations** - Ensure compliance with CAN-SPAM and GDPR
+5. **Set appropriate delays** - Space out emails to avoid spam folder placement
 
-```bash
-npm run dev
-```
+## Limitations & Notes
 
-**Interactive Prompt:**
-
-```
-📥 Enter a seed company domain (e.g., stripe.com): 
-```
-
-Enter a domain and the system will:
-
-1. Discover similar companies
-2. Research decision-makers
-3. Show safety checkpoint
-4. Ask for approval
-5. Send emails if approved
-
-### Example Execution
-
-```bash
-$ npm run dev
-
-📥 Enter a seed company domain (e.g., stripe.com): slack.com
-
-🔍 Stage 1 (Alternative): Finding accounts related to slack.com via Prospeo...
-✅ Stage 1 Complete: Discovered 5 live target companies.
-
-🔍 Stage 2: Researching decision-makers and verified work emails...
-✅ Stage 2 Complete: Found 12 verified prospects.
-
-🛑 --- SAFETY CHECKPOINT ---
-The system is primed to mail 12 verified contacts:
-  [1] John Smith (VP Sales) -> john@company1.com
-  [2] Jane Doe (CEO) -> jane@company2.com
-  ...
-
-Do you authorize sending these personalized emails? (yes/no): yes
-
-📧 Stage 3: Sending personalized outreach emails...
-✅ Pipeline execution successfully finished!
-```
-
-## Screenshots
-
-*[Add pipeline execution screenshots here]*
-
-- Screenshot 1: CLI input prompt - `screenshots/01-cli-input.png`
-- Screenshot 2: Stage 1 execution output - `screenshots/02-stage1-output.png`
-- Screenshot 3: Stage 2 decision-maker discovery - `screenshots/03-stage2-prospects.png`
-- Screenshot 4: Safety checkpoint before sending - `screenshots/04-safety-checkpoint.png`
-- Screenshot 5: Stage 3 email delivery - `screenshots/05-stage3-delivery.png`
-- Screenshot 6: Final completion message - `screenshots/06-completion.png`
-
-## Notes & Implementation Details
-
-### Stage 1 (Ocean → Prospeo Alternative)
-
-- Original plan used Ocean.io but switched to Prospeo for reliability
-- Filters companies by software development industry
-- Returns top 5 targets to avoid overwhelming the pipeline
-
-### Stage 2 (Prospeo)
-
-- Searches for C-suite and VP-level contacts
-- Extracts LinkedIn profiles for verification
-- Handles missing data gracefully
-
-### Stage 3 (Brevo - Email Sending)
-
-- ~~Eazyreach was originally planned but had API issues, so it was skipped~~
-- Uses Brevo's SMTP and transactional email APIs
-- Implements personal touch through Brevo template system
-
-### Safety Checkpoint
-
-- Critical feature to prevent accidental mass emails
-- Shows all prospected contacts before sending
-- Requires explicit user confirmation
-
-## Troubleshooting
-
-**Issue:** "Prospeo API error"
-
-- Check your API key in `.env`
-- Verify your Prospeo account has available credits
-
-**Issue:** "No lookalike targets returned"
-
-- Try a different seed domain
-- Check if the domain exists and is valid
-
-**Issue:** "No verified emails found"
-
-- The discovery stage may have insufficient data
-- Try a larger seed company in a common industry
+- Requires valid API credentials for all three services
+- Email delivery depends on Brevo's sender reputation
+- Prospect data quality depends on Ocean and Prospeo accuracy
+- Rate limits apply to each API service
+- Should be used responsibly with proper email authentication
 
 ## Future Enhancements
 
-- [ ] Integration with Email warmup tools
-- [ ] A/B testing for email subject lines
-- [ ] Real-time delivery tracking dashboard
-- [ ] Integration with CRM systems
-- [ ] Batch processing for multiple seed domains
-- [ ] Custom email template builder
+- [ ] Support for multiple seed domains
+- [ ] Custom email templates
+- [ ] A/B testing for subject lines and content
+- [ ] Response tracking and engagement metrics
+- [ ] Scheduled campaigns
+- [ ] Database integration for prospect history
+- [ ] Web dashboard for campaign monitoring
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit issues and enhancement requests.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-ISC
+This project is licensed under the ISC License - see the LICENSE file for details.
+
+## Support
+
+For issues, questions, or suggestions:
+
+- Open an issue on [GitHub](https://github.com/sahalpk007/automated-outreach-pipeline/issues)
+- Check existing documentation and examples
+
+## Disclaimer
+
+This tool is designed for legitimate B2B sales and marketing purposes. Users are responsible for:
+
+- Obtaining proper API credentials
+- Following email marketing best practices
+- Complying with anti-spam laws (CAN-SPAM, GDPR, etc.)
+- Respecting recipient preferences and privacy
+- Monitoring email deliverability and bounce rates
+
+Misuse of this tool for spamming or unauthorized contact is strictly prohibited.
+
+---
+
+**Made with ❤️ by the Automated Outreach Team**
