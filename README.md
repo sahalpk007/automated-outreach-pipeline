@@ -190,30 +190,7 @@ Do you authorize sending these personalized emails? (yes/no): yes
 ✅ Pipeline execution successfully finished!
 ```
 
-## Evaluation Checklist
-
-- ✅ **It runs and to end** - Single domain input, all four stages fire automatically
-- ✅ **Integrations done right** - Auth, pagination, and error handling wired correctly against each tool's real API
-- ✅ **Clean, modular code** - One stage is one clear unit—readable, separable, and easy to extend
-- ✅ **Resilient to messy data** - Missing contacts, rate limits, and partial failures don't crash the run
-- ✅ **Good judgment** - Safety checkpoint before emails fire, plus sensible defaults throughout
-- ⭐ **Bonus: Sharp email copy** - Personalized outreach you'd actually open beats a generic blast
-
-## Evaluation & The Live Demo
-
-### What We Look For
-
-**Run it live:** Enter a domain and watch the pipeline execute and to end
-
-**Walk the code:** Talk through your structure and the API decisions you made
-
-**Edge cases:** Expect questions on rate limits, de-duplication, and undeliverable emails
-
-**Live tweak:** We may ask you to change or extend a stage on the spot
-
-**Be honest:** A working slice beats a broken whole—explain what you can and can't do
-
-### Screenshots & Demo
+## Screenshots
 
 *[Add pipeline execution screenshots here]*
 
@@ -279,11 +256,3 @@ Do you authorize sending these personalized emails? (yes/no): yes
 ## License
 
 ISC
-
-## Support
-
-For questions or issues, reach out via WhatsApp: **+91 99400 91513**
-
----
-
-**Built with focus on automation, reliability, and user safety.**
