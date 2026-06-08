@@ -105,25 +105,27 @@ npm run dev
    - The system will find similar companies based on this reference
 
 2. **Stage 1 - Lookalike Discovery**
-   - Queries Ocean API to find companies similar to your seed domain
-   - Returns a curated list of target prospects
-
-3. **Stage 2 - Prospect Research**
+      OCEAN_API_KEY=your_ocean_api_key
+      PROSPEO_API_KEY=your_prospeo_api_key
+      BREVO_API_KEY=your_brevo_api_key
+      SENDER_EMAIL=<your_verified_sender_email@company.com>
+      SENDER_NAME="Your Name"
    - Identifies decision makers at each target company
    - Extracts and verifies email addresses using Prospeo
    - Returns enriched prospect profiles with contact details
+   Sends personalized cold emails via Brevo.
 
-4. **Safety Checkpoint**
-   - Review all identified prospects and their details
+   Note: The current default email copy is sent as a test message (subject prefixed with "Test:") and includes a clear opt-out/instruction to ignore if not interested. The pipeline still requires your explicit confirmation at the Safety Checkpoint before any emails are dispatched.
    - Confirm that verified emails will be used
    - Authorize or abort before any emails are sent
 
-5. **Stage 3 - Outreach Execution**
+3. **Stage 3 - Outreach Execution**
    - Sends personalized cold emails via Brevo
-   - Tracks email delivery status
-   - Completes the outreach campaign
-
-### Example Session
+   | `OCEAN_API_KEY` | API key for Ocean lookalike discovery service (used by Stage 1) | Yes |
+   | `PROSPEO_API_KEY` | API key for Prospeo prospect research service (used by Stage 2) | Yes |
+   | `BREVO_API_KEY` | API key for Brevo email service (used by Stage 3) | Yes |
+   | `SENDER_EMAIL` | Verified sender email address (used as the `from` address) | Yes |
+   | `SENDER_NAME` | Human-readable sender name shown in emails | Recommended |
 
 ```
 📥 Enter a seed company domain (e.g., stripe.com): stripe.com
