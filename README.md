@@ -199,20 +199,23 @@ automated-outreach-pipeline/
 
 ### Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `OCEAN_API_KEY` | API key for Ocean lookalike discovery service | Yes |
-| `PROSPEO_API_KEY` | API key for Prospeo prospect research service | Yes |
-| `BREVO_API_KEY` | API key for Brevo email service | Yes |
-| `BREVO_SENDER_EMAIL` | Verified sender email address in Brevo | Yes |
+| Variable | Description | Example | Required |
+|----------|-------------|---------|----------|
+| `OCEAN_API_KEY` | API key for Ocean.io (Stage 1 company discovery) | `api_5hs...` | Yes |
+| `PROSPEO_API_KEY` | API key for Prospeo (Stage 2 prospect research) | `pk_c54...` | Yes |
+| `BREVO_API_KEY` | API key for Brevo (Stage 3 email delivery) | `xkeysib-78f...` | Yes |
+| `SENDER_EMAIL` | Verified sender email in Brevo (used as "from" address) | `sahal@sahalpk.me` | Yes |
+| `SENDER_NAME` | Display name for the sender | `Sahal P K` | Recommended |
+
+**Important:** Never commit `.env` file to version control. Use `.env.example` as a template.
 
 ## Scripts
 
 ```bash
-# Run the pipeline in development mode
-npm run dev
+# Run the pipeline interactively
+npx tsx src/index.ts
 
-# Build the TypeScript project
+# Build the TypeScript project (if needed)
 npm run build
 
 # Run the compiled JavaScript (after building)
@@ -269,23 +272,25 @@ The pipeline includes robust error handling:
 4. **Respect email regulations** - Ensure compliance with CAN-SPAM and GDPR
 5. **Set appropriate delays** - Space out emails to avoid spam folder placement
 
-## Limitations & Notes
+## Limitations & Known Issues
 
-- Requires valid API credentials for all three services
-- Email delivery depends on Brevo's sender reputation
-- Prospect data quality depends on Ocean and Prospeo accuracy
-- Rate limits apply to each API service
-- Should be used responsibly with proper email authentication
+- **Email Deliverability**: Test emails are marked as such in subject and footer. Verify sender domain SPF/DKIM in Brevo for better inbox placement.
+- **API Rate Limits**: Each service (Ocean, Prospeo, Brevo) has rate limits. Monitor API usage and implement backoff strategies for production.
+- **Prospect Data Quality**: Results depend on accuracy of Ocean and Prospeo data. Always review the safety checkpoint before sending.
+- **Email Content**: Current template is generic. Customize for better response rates.
+- **Credit Usage**: Prospeo searches consume credits; avoid enrichment calls to conserve credits.
 
 ## Future Enhancements
 
-- [ ] Support for multiple seed domains
-- [ ] Custom email templates
+- [ ] Support for multiple seed domains in batch mode
+- [ ] Custom email template builder
 - [ ] A/B testing for subject lines and content
 - [ ] Response tracking and engagement metrics
-- [ ] Scheduled campaigns
+- [ ] Scheduled/staggered campaign mode
 - [ ] Database integration for prospect history
 - [ ] Web dashboard for campaign monitoring
+- [ ] Retry logic for failed email sends
+- [ ] Webhook integration for delivery status updates
 
 ## Contributing
 
@@ -312,14 +317,13 @@ For issues, questions, or suggestions:
 
 This tool is designed for legitimate B2B sales and marketing purposes. Users are responsible for:
 
-- Obtaining proper API credentials
-- Following email marketing best practices
+- Obtaining proper API credentials and maintaining them securely
+- Following email marketing best practices and regulations
 - Complying with anti-spam laws (CAN-SPAM, GDPR, etc.)
 - Respecting recipient preferences and privacy
 - Monitoring email deliverability and bounce rates
+- Using verified sender domains with proper SPF/DKIM setup in Brevo
 
 Misuse of this tool for spamming or unauthorized contact is strictly prohibited.
 
 ---
-
-**Made with ❤️ by the Automated Outreach Team**

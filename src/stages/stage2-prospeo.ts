@@ -1,16 +1,50 @@
+/**
+ * Stage 2: Decision-Maker Discovery & Email Verification via Prospeo
+ * 
+ * Identifies high-seniority executives (C-suite, VPs, Founders) at target companies
+ * and extracts verified business email addresses from search results.
+ * 
+ * API Endpoint: https://api.prospeo.io/search-person
+ * Authentication: X-KEY header (API Key)
+ * 
+ * Strategy: Data-efficient approach
+ * - Uses search-person endpoint which returns partial email data in results
+ * - Avoids costly enrichment API calls (which would require additional credits)
+ * - Only collects prospects with emails already present in search results
+ * - Filters by seniority level to ensure decision-maker relevance
+ * 
+ * Input: Array of company domains from Stage 1
+ * Output: Array of Prospect objects with verified contacts
+ */
+
 import dotenv from 'dotenv';
 import type { Prospect } from '../types.js';
 dotenv.config();
 
+/**
+ * Discovers decision-makers and extracts verified email addresses.
+ * 
+ * Implementation details:
+ * - Filters by seniority: Founder/Owner, C-Suite, Vice President, Director
+ * - Only includes prospects with emails already in search results (avoids enrichment credits)
+ * - Handles email data that may be nested in object or direct string
+ * - Provides feedback on skipped prospects for transparency
+ * - Uses "Executive" as fallback for missing first names
+ * 
+ * @param domains - Array of company domains to search for decision-makers
+ * @returns Promise<Prospect[]> - Enriched prospect profiles with verified contacts
+ */
 export async function findDecisionMakersAndEmails(domains: string[]): Promise<Prospect[]> {
     console.log(`\n👥 Stage 2: Initiating Prospeo Lead Discovery Engine...`);
     const allProspects: Prospect[] = [];
 
+    // Early return: no domains provided by Stage 1
     if (domains.length === 0) return [];
 
     try {
         console.log(`📡 Querying Prospeo Search-Person for lookalike domains...`);
 
+        // Query Prospeo for high-seniority contacts at target companies
         const searchResponse = await fetch('https://api.prospeo.io/search-person', {
             method: 'POST',
             headers: {

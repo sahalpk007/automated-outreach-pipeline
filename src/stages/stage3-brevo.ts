@@ -1,13 +1,48 @@
+/**
+ * Stage 3: Personalized Email Outreach via Brevo
+ * 
+ * Sends professionally templated, personalized cold emails to verified prospects
+ * via Brevo's transactional SMTP API.
+ * 
+ * API Endpoint: https://api.brevo.com/v3/smtp/email
+ * Authentication: api-key header (API Key)
+ * 
+ * Email Strategy:
+ * - Frames outreach as a testing initiative (transparency and compliance)
+ * - Includes explicit opt-out instruction (respect and GDPR compliance)
+ * - Personalizes with prospect name, title, and company
+ * - Professional HTML template with inline CSS for client compatibility
+ * - Clearly marks as test message in subject line and footer
+ * 
+ * Input: Array of Prospect objects with verified emails
+ * Output: Console logs of delivery status via Brevo message IDs
+ */
+
 import dotenv from 'dotenv';
 import type { Prospect } from '../types.js';
 dotenv.config();
 
+/**
+ * Sends personalized test outreach emails to prospects.
+ * 
+ * Implementation details:
+ * - Sends individual emails (not batch) for granular error handling
+ * - Includes full HTML template with inline CSS for cross-client compatibility
+ * - Personalizes subject, greeting, and company references
+ * - Handles per-email failures without stopping the loop
+ * - Logs delivery status and Brevo message ID for tracking
+ * - Uses environment variables for sender email/name (verified in Brevo)
+ * 
+ * @param prospects - Array of verified prospects to email
+ * @returns Promise<void> - No return value; side effects are email sends and console logs
+ */
 export async function sendOutreachEmails(prospects: Prospect[]): Promise<void> {
     console.log(`\n🚀 Stage 3: Dispatching personalized emails...`);
 
+    // Process each prospect with error isolation (one failure doesn't break the loop)
     for (const person of prospects) {
         try {
-            // Personalized professional outreach template
+            // Build personalized HTML email template with inline CSS for compatibility across email clients
             const emailHtml = `
 <html>
 <head>
