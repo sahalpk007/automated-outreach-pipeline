@@ -7,8 +7,52 @@ export async function sendOutreachEmails(prospects: Prospect[]): Promise<void> {
 
     for (const person of prospects) {
         try {
-            // Personalized outreach template
-            const emailHtml = `<html><head></head><body><p>Hi ${person.firstName},</p><p>I noticed your work as ${person.title} at ${person.companyDomain}.</p><p>We are building automated outbound infrastructure that scales pipelines with zero humans in the loop. Would love to sync up!</p><p>Best,<br/>Sahal</p></body></html>`;
+            // Personalized professional outreach template
+            const emailHtml = `
+<html>
+<head>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { margin-bottom: 24px; }
+        .content { margin-bottom: 24px; }
+        .footer { color: #666; font-size: 14px; margin-top: 32px; border-top: 1px solid #e0e0e0; padding-top: 16px; }
+        .signature { margin-top: 24px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <p>Dear ${person.firstName},</p>
+        </div>
+        <div class="content">
+            <p>I hope this message finds you well. I came across your profile and was impressed by your role as ${person.title} at ${person.companyDomain}.</p>
+            
+            <p>I am currently testing a fully automated outreach workflow and wanted to share a short, relevant note. The goal is to see how well personalized outbound can support outreach and growth operations. Many organizations in your space are facing challenges with:</p>
+            
+            <ul>
+                <li>Manual prospecting and lead discovery processes</li>
+                <li>Inconsistent follow-up and engagement workflows</li>
+                <li>Limited scalability without proportional team growth</li>
+            </ul>
+            
+            <p>We've been building and testing automation around the outbound pipeline, from company discovery through personalized outreach, while keeping the communication straightforward and respectful.</p>
+            
+            <p>If this is relevant, I would be glad to connect briefly. If not, please feel free to ignore this email entirely.</p>
+        </div>
+        <div class="signature">
+            <p>Best regards,</p>
+            <p><strong>Sahal</strong><br/>
+            Software Engineer<br/>
+            <a href="https://sahalpk.me">sahalpk.me</a></p>
+        </div>
+        <div class="footer">
+            <p>This is a test message from an automated outreach workflow. If you are not interested, please ignore this email.</p>
+        </div>
+    </div>
+</body>
+</html>
+`;
 
             // Native fetch built around Brevo v3 Transactional SMTP guidelines
             const response = await fetch('https://api.brevo.com/v3/smtp/email', {
@@ -29,7 +73,7 @@ export async function sendOutreachEmails(prospects: Prospect[]): Promise<void> {
                             name: `${person.firstName} ${person.lastName}`
                         }
                     ],
-                    subject: `Quick question regarding operations at ${person.companyDomain}`,
+                    subject: `Test: Automated Outreach Workflow for ${person.companyDomain}`,
                     htmlContent: emailHtml
                 })
             });
